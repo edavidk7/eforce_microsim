@@ -6,7 +6,7 @@ Using this miniature simulator, you will be tasked with tuning and possibly impl
 
 ## Installation
 
-1. Clone this repository onto a machine with Linux or macOS
+1. Clone this repository onto a machine with Linux or macOS, do it over [SSH](https://phoenixnap.com/kb/git-clone-ssh) for easier access (that **is** what you will be using once you start developing the full system)
 2. Make sure to have python >= 3.10 installed (ideally 3.11 - 3.12)
 3. Activate you venv if applicable or make sure your python is aliased under `python`
 4. Run `python -m pip install -r requirements.txt` to install the required packages
@@ -46,6 +46,10 @@ You can disable this by running the simulation with the `--no_log` flag.
 Have fun!
 
 ![Peepo](https://cdn.frankerfacez.com/emoticon/577131/4)
+
+## Notes
+
+If you end up writing your own algorithm (for anything), please include it in your `mission.py` file and make sure to document it well. We will be looking at your code and how well you can explain it.
 
 ## Helpful resources
 
