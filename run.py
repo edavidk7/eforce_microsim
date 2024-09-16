@@ -5,6 +5,8 @@ from pathlib import Path
 from helpers.sim import State, StateRenderer, make_simulation_object, plot_state_summary_and_wait, history_to_csv
 from config import state_config
 
+MAP_ROI = 120.  # meters
+
 
 def run_mission(map_path: str | Path, logdir: Path | None):
     state = State(map_path, state_config)
@@ -22,7 +24,7 @@ def run_mission(map_path: str | Path, logdir: Path | None):
             print(f"Finished in {mission_time:.2f} seconds!")
             finish_time = mission_time
             break
-        elif not state.is_within_roi(120.):
+        elif not state.is_within_roi(MAP_ROI):
             print("Car went out of bounds!")
             break
     renderer.close()
