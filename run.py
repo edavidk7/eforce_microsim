@@ -22,7 +22,7 @@ def run_mission(map_path: str | Path, logdir: Path | None):
             print(f"Finished in {mission_time:.2f} seconds!")
             finish_time = mission_time
             break
-        elif not state.is_within_roi():
+        elif not state.is_within_roi(120.):
             print("Car went out of bounds!")
             break
     renderer.close()

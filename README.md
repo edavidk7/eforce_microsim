@@ -12,6 +12,12 @@ Using this miniature simulator, you will be tasked with tuning and possibly impl
 4. Run `python -m pip install -r requirements.txt` to install the required packages
 5. run `python run.py` to start the simulation with evaluation
 
+![Sim screenshot](./img/sim.png)
+
+While the animation is running, you can press `q` to hide it or `e` to quit the whole program. After the simulation, a summary pane is shown. Press any key to close it and continue with the next map. You can press `s` to save the summary plot to an image.
+
+![Summary screenshot](./img/summary.png)
+
 ## Structure
 
 - `run.py` - Main runner script for the simulation
@@ -21,11 +27,25 @@ Using this miniature simulator, you will be tasked with tuning and possibly impl
 - `helpers/` - Contains all driverless algorithms and simulator code
 - `maps/` - Contains all the maps for the simulator
 
+While running the simulation, a log folder will be automatically created with csv files containing the logs of the simulation for each of the maps.
+You can disable this by running the simulation with the `--no_log` flag.
+
 ## Task
 
 1. Implement the `mission.py` file to successfully drive around the track
-2. Tune the PID controller in the `mission.py` file to achieve the best performance
+2. Tune the PID controller in the `user_config.py` file to achieve the best performance
 3. Be the fastest around the track! You will be compared with others
+
+### Tips
+
+1. Fix the PID controller first
+2. Tune the path tracking constants
+3. Improve, reimplement or keep the path planning algorithm
+4. Think about how you could improve the path for the speed planning algorithm (adding more points?)
+
+Have fun!
+
+![Peepo](https://cdn.frankerfacez.com/emoticon/577131/4)
 
 ## Helpful resources
 
@@ -35,3 +55,4 @@ Using this miniature simulator, you will be tasked with tuning and possibly impl
 4. https://www.youtube.com/watch?v=U6vr3iNrwRA&list=PLgnQpQtFTOGQrZ4O5QzbIHgl3b1JHimN_
 5. https://numpy.org/
 6. https://docs.python.org/3.11/
+7. https://dspace.cvut.cz/handle/10467/101617
