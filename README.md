@@ -7,7 +7,7 @@ Using this miniature simulator, you will be tasked with tuning and possibly impl
 ## Installation
 
 1. Clone this repository onto a machine with Linux or macOS, do it over [SSH](https://phoenixnap.com/kb/git-clone-ssh) for easier access (that is what you will be using once you start developing the full system)
-2. Make sure to have python >= 3.10 installed (ideally 3.11 - 3.12)
+2. Make sure to have python >= 3.10 installed (ideally 3.11 - 3.12). On macOS, use [homebrew](https://brew.sh/) exclusively for all packages. On Ubuntu, install it using [deadsnakes](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Other Linux distros usually have good package managers with latest python versions (Fedora, Manjaro, Arch).
 3. Activate you venv if applicable or make sure your python is aliased under `python`
 4. Run `python -m pip install -r requirements.txt` to install the required packages
 5. run `python run.py` to start the simulation with evaluation
