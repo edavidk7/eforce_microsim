@@ -162,3 +162,4 @@ cython_debug/
 #.idea/
 config_nonpub.py
 logs/
+.DS_Store
