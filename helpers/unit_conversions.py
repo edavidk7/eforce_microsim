@@ -1,5 +1,5 @@
 import numpy as np
-from bros.configs.car_params import car_params
+from config import car_params
 
 
 def get_earth_radius_at_pos(lat, sea_level=0.0):
