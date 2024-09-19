@@ -1,7 +1,7 @@
 from enum import IntEnum
 import numpy as np
 import pickle
-from user_config import controller_gains
+from gains import controller_gains
 
 
 class ConeClasses(IntEnum):
