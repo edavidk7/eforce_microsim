@@ -4,9 +4,9 @@ import time
 import numpy as np
 import platform
 import warnings
-if platform.system() == "Darwin":
-    import matplotlib
-    matplotlib.use("Qt5Agg")
+#if platform.system() == "Darwin":
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from config import ConeClasses
