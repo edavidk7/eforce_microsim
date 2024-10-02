@@ -33,7 +33,7 @@ class PID:
         # Regulation step
         error = setpoint - process_variable
         self.i += error * dt
-        output = self.kp * error + self.ki * self.i + self.kd * (error - self.e_prev) / dt
+        output = self.kp * error + self.ki * self.i + self.kd * (error - self.e_prev) * dt
         self.e_prev = error
 
         # Anti-windup (conditional integration) and saturation
@@ -42,6 +42,6 @@ class PID:
             self.i -= error * dt
         elif output < self.min:
             output = self.min
-            self.i -= error * dt
+            self.i += error * dt
 
         return output
