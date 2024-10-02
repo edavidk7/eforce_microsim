@@ -17,8 +17,8 @@ class MyMission():
         self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
         self.speed_profile = SpeedProfile(0.8, 2, 4)
-        self.min_speed_setpoint = 5.  # m/s
-        self.max_safe_speed = 8.  # m/s
+        self.min_speed_setpoint = 0.  # m/s
+        self.max_safe_speed = 16.5  # m/s
         self.speed_setpoint = self.min_speed_setpoint
         self.finished = False
         self.finish_time = float('inf')

@@ -3,7 +3,7 @@ import numpy as np
 
 class SpeedProfile:
     def __init__(self, mu=0.8, max_acceleration=2, max_braking=4):
-        self.GRAVITY = 9.8
+        self.GRAVITY = 9.81
         self.CAR_MU = mu
         self.MAX_ACCELERATION = max_acceleration
         self.MAX_BRAKING = max_braking
@@ -36,7 +36,7 @@ class SpeedProfile:
     def profile(self, path, initial_speed=0.):
         def stanford_profile(seglengths, segcurvatures):
             # First pass: Speed based on curvature and friction ellipse
-            first_pass = np.sqrt((self.CAR_MU * self.GRAVITY) / segcurvatures)
+            first_pass = np.sqrt((self.CAR_MU * self.GRAVITY) / segcurvatures*6)
 
             # Second pass: Limit speed to avoid extreme acceleration
             second_pass = np.zeros_like(first_pass)
@@ -48,7 +48,7 @@ class SpeedProfile:
             # Third pass: Limit speed to avoid extreme braking
             third_pass = np.copy(second_pass)
             for s in range(len(second_pass) - 2, -1, -1):
-                compensation = 2 * self.MAX_BRAKING * seglengths[s]
+                compensation = 3 * self.MAX_BRAKING * seglengths[s]
                 third_pass[s] = min(second_pass[s], np.sqrt(third_pass[s + 1]**2 + compensation))
 
             return third_pass
