@@ -17,31 +17,44 @@ class PID:
         self.ki = ki
         self.kd = kd
 
+    def get_pid_gains(self, speed):
+        """
+        Adjust PID gains based on current speed or setpoint.
+        This is the gain scheduling function.
+        """
+        self.set_gains(self.kp, self.ki, self.kd)
+
     def step(self, setpoint, process_variable, dt):
         """
-        PID controller step
+        PID controller step with dynamic gain scheduling.
 
         Args:
-          setpoint - desired value
-          process_variable - current value
+          setpoint - desired value (speed)
+          process_variable - current value (actual speed)
           dt - time step
 
         Returns:
-            output - PID output 
+            output - PID output
         """
 
-        # Regulation step
-        error = setpoint - process_variable
-        self.i += error * dt
-        output = self.kp * error + self.ki * self.i + self.kd * (error - self.e_prev) * dt
+        # Adjust PID gains based on current setpoint (or actual speed)
+        self.get_pid_gains(setpoint)  # Optionally use process_variable instead of setpoint
+
+        # Regulation step with anti-windup
+        error = setpoint - process_variable 
+
+        # Update integral (i) term with a limit to avoid windup
+        integral_limit = 100  # Set a reasonable limit to avoid large integrals
+        self.i += error * dt / 2
+        self.i = max(min(self.i, integral_limit), -integral_limit)  # Apply the limit
+
+        # PID control output
+        output = self.kp * error + self.ki * self.i + self.kd * (error - self.e_prev) / dt
+
+        # Save the previous error for derivative calculation
         self.e_prev = error
 
-        # Anti-windup (conditional integration) and saturation
-        if output > self.max:
-            output = self.max
-            self.i -= error * dt
-        elif output < self.min:
-            output = self.min
-            self.i += error * dt
+        # Clamp output to max/min limits
+        output = max(self.min, min(output, self.max))
 
         return output

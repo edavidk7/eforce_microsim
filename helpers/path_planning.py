@@ -138,10 +138,39 @@ class PathPlanning(object):
 
             TODO: invent something more robust
             """
+            print("Filling missing cones")
             if Y.size != 0:
-                Y = Y[np.argsort(Y[:, self.movement_direction])]
+                tmp_cone = [0, 0]
+                closest = []
+                for calc in range(len(Y)):
+                    distance = []
+                    iteration = 0
+                    for cone in Y:
+
+                        if iteration not in closest:
+                            distance.append((cone[0]-tmp_cone[0])**2 + (cone[1]-tmp_cone[1])**2)
+                        else:
+                            distance.append(0)
+                        iteration += 1
+                    closest.append(distance.index(min(i for i in distance if i > 0)))
+                    tmp_cone = Y[closest[calc]]
+            
+                Y = Y[closest]
+                # print(Y)
             else:
-                B = B[np.argsort(B[:, self.movement_direction])]
+                tmp_cone = [0, 0]
+                closest = []
+                for calc in range(len(B)):
+                    distance = []
+                    iteration = 0
+                    for cone in B:
+                        if iteration not in closest:
+                            distance.append((cone[0]-tmp_cone[0])**2 + (cone[1]-tmp_cone[1])**2)
+                        iteration += 1
+                    closest.append(distance.index(min(i for i in distance if i > 0))+calc)
+                    tmp_cone = B[closest[calc]]
+            
+                B = B[closest]
 
             B, Y = self.fill_missing(B, Y)
         self.tmp = {"B": B, "Y": Y}
