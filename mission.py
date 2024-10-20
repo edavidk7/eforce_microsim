@@ -30,7 +30,7 @@ class MyMission():
         # 1. Path planning and speed profile
         path = self.path_planner.find_path(percep_data)
         try:
-            self.speed_setpoint = self.speed_profile.profile(path, wheel_speed)[0]
+            self.speed_setpoint = self.speed_profile.profile(path, wheel_speed)[0]*1.612
         except Exception as e:
             print(f"Error in speed profile: {e}")
 
