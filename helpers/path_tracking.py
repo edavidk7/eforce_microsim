@@ -24,7 +24,7 @@ def get_lookahead_point(lookahead, path):
         cum_dist += dist
 
         if cum_dist >= lookahead:
-            last_piece_coef = (cum_dist - lookahead) / (dist + 1e-10)
+            last_piece_coef = (cum_dist - lookahead) / (dist + 1e-6)
             target = path[i + 1] - last_piece_coef * line
             break
     return target
@@ -54,8 +54,8 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
       log_msg - dictionary containing internal values of the controller (for debugging purposes)
     """
     if False:
-        lookahead_dist = lookahead_dist * (speed / 7.0)
-        lookahead_dist = np.clip(lookahead_dist, 2.8, 6.5)
+        lookahead_dist = lookahead_dist * speed / 8.896666666666667
+        lookahead_dist = np.clip(lookahead_dist, 0.1, 15.0)
     target = get_lookahead_point(lookahead_dist, path)
     lateral_target = get_lookahead_point(0.0, path)
 

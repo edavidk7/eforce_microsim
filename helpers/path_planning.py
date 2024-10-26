@@ -3,7 +3,7 @@ from config import ConeClasses
 
 
 class PathPlanning(object):
-    def __init__(self, start_point, clockwise=-1, filling_cones_distance=3.5, movement_direction="x", debugging=False):
+    def __init__(self, start_point, clockwise=-1, filling_cones_distance=7.5, movement_direction="x", debugging=False):
         """
         :params start_point: numpy.array with coordinates of starting point
         :param clockwise: direction in which we want to find path
@@ -56,7 +56,7 @@ class PathPlanning(object):
 
     def find_closest_one(self, points):
         closest_index = np.argmin(np.linalg.norm(
-            points - self.start_points[-1], axis=1))
+            points - self.start_points[-1], axis=-1))
         closest_cone = points[closest_index]
         return closest_cone
 
@@ -274,7 +274,7 @@ class PathPlanning(object):
 
 
 class PathPlanner():
-    def __init__(self, opt={"n_steps": 20}):
+    def __init__(self, opt={"n_steps": 10}):
         self.n_steps = opt["n_steps"]
         self.planner = PathPlanning(np.array([0, 0]))
 
