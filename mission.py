@@ -16,7 +16,7 @@ class MyMission():
         # Feel free to change these parameters
         self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
-        self.speed_profile = SpeedProfile(0.75, 1, 2)
+        self.speed_profile = SpeedProfile(0.75, 0.5, 2)
         self.min_speed_setpoint = -2.  # m/s
         self.max_safe_speed = 16.5  # m/s
         self.speed_setpoint = self.min_speed_setpoint
@@ -30,7 +30,7 @@ class MyMission():
         # 1. Path planning and speed profile
         path = self.path_planner.find_path(percep_data)
         try:
-            self.speed_setpoint = self.speed_profile.profile(path, wheel_speed)[0]*1.712
+            self.speed_setpoint = self.speed_profile.profile(path, wheel_speed)[0]*1.512
             #self.speed_setpoint = 10
         except Exception as e:
             print(f"Error in speed profile: {e}")
@@ -45,7 +45,7 @@ class MyMission():
         if self.stopped_time + 1. < mission_time:
             self.finished = True
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 4.5, wheel_speed, 2.9, 0.0)
+        steering_ang, controller_log = stanley_steering(path, 4.5, wheel_speed, 3-self.speed_setpoint/25, 0.0)
         # 4. logging and debugging
         extras = {
             "mission_time": mission_time,
