@@ -1,5 +1,6 @@
 import numpy as np
 from config import ConeClasses
+import scipy.spatial as ss
 
 
 class PathPlanning(object):
@@ -24,6 +25,7 @@ class PathPlanning(object):
         self.movement_direction = int(movement_direction == "y")
         # "y"->1 cones[:,1], "x"->0 cones[:,0]
         self.debugging = debugging
+        self.switch = False
         if self.debugging:
             self.ks = []
             self.cs = []
@@ -39,6 +41,7 @@ class PathPlanning(object):
         self.k = 0
         self.c = None
         self.k_past = 0
+        self.switch = False
         if self.debugging:
             self.ks = []
             self.cs = []
@@ -129,6 +132,7 @@ class PathPlanning(object):
         """
 
         if B.size == 0 or Y.size == 0:
+            self.switch = True
             """
             fill_missing suppose that there are only two known cones in front of car
             or located cones are sorted in natural way -> according to distance from car
@@ -155,7 +159,6 @@ class PathPlanning(object):
         y_0 = self.find_closest_one(Y)
         self.sorted_blue_cones.append(b_0)
         self.sorted_yellow_cones.append(y_0)
-
         s_1 = self.calculate_center(b_0, y_0)
         self.start_points.append(s_1)
 
@@ -192,6 +195,35 @@ class PathPlanning(object):
                         break
                     else:
                         raise ValueError(str(err))
+
+    def triangulation(self, B, Y, start_point, n_steps, verbose=False):
+        self.find_path(B, Y, n_steps=n_steps)
+        #print("jej1")
+        if min(len(self.sorted_blue_cones), len(self.sorted_yellow_cones)) >= 2:# and self.switch == False:
+            #self.start_points = [start_point]
+            del_init = []
+            for i in range(0, min(len(self.sorted_blue_cones), len(self.sorted_yellow_cones))):
+                del_init.append(self.sorted_yellow_cones[i])
+                del_init.append(self.sorted_blue_cones[i])
+            #print(len(del_init))
+            #print("jej2")    
+            tri = ss.Delaunay(del_init)
+            for simplex in tri.simplices:
+                sorted_simplex = np.sort(simplex)
+                #print("jej3")
+                #print(str(sorted_simplex[0]) + " " + str(sorted_simplex[1]) + " " + str(sorted_simplex[2]))
+                if sorted_simplex[0] == sorted_simplex[1] - 1 and sorted_simplex[1] == sorted_simplex[2] - 1:
+                    #print("kek")
+                    s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[1]])
+                    self.start_points.append(s_0)
+                    #s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
+                    #self.start_points.append(s_1)
+                elif sorted_simplex[0] == sorted_simplex[1] - 2 and sorted_simplex[1] == sorted_simplex[2] - 1:
+                    s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[2]])
+                    self.start_points.append(s_0)
+                    #s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
+                    #self.start_points.append(s_1)
+                           
 
     def fill_missing(self, B, Y):
         # set_trace()
@@ -258,9 +290,12 @@ class PathPlanner():
             yellow_cones = cones[cones[:, 2] == ConeClasses.YELLOW, :]
             blue_cones = cones[cones[:, 2] == ConeClasses.BLUE, :]
         try:
-            self.planner.find_path(blue_cones[:, :2], yellow_cones[:, :2], n_steps=self.n_steps)
+            #self.planner.find_path(blue_cones[:, :2], yellow_cones[:, :2], n_steps=self.n_steps)
+            self.planner.triangulation(blue_cones[:, :2], yellow_cones[:, :2], np.array([0., 0.]), n_steps=self.n_steps)
             path = np.vstack(self.planner.start_points)
         except:
+            #print('except')
+            #print(str(err))
             path = np.array([[0., 0.]])
 
         path_sorted_idxs = path[:, 0].argsort()

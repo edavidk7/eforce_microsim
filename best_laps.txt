@@ -1,0 +1,5 @@
+Finished in 44.30 seconds!
+Running mission on map 2
+Finished in 47.20 seconds!
+Running mission on map 3
+Finished in 31.57 seconds!
