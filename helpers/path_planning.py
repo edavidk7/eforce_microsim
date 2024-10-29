@@ -274,7 +274,7 @@ class PathPlanning(object):
 
 
 class PathPlanner():
-    def __init__(self, opt={"n_steps": 10}):
+    def __init__(self, opt={"n_steps": 35}):
         self.n_steps = opt["n_steps"]
         self.planner = PathPlanning(np.array([0, 0]))
 
