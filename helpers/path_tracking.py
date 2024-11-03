@@ -64,12 +64,15 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
 
     direction = math.atan2(dy, dx)
     if len(path) > 1:
-        lat_offset = lateral_target[1]
-        # lat_offset = target[1]
+        line = [lateral_target[0], lateral_target[1]]
+        lat_offset = np.linalg.norm(line)
+        #lat_offset = lateral_target[1]
+        #lat_offset = target[1]
     else:
         lat_offset = 0
     if speed > 0.3:
         nonLinear = 2 * math.atan2(lateran_gain * lat_offset, speed) / np.pi
+        #nonLinear = math.atan2(lateran_gain * lat_offset, speed)
     else:
         nonLinear = 0
 

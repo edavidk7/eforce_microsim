@@ -1,6 +1,7 @@
 import numpy as np
 from config import ConeClasses
 import scipy.spatial as ss
+from copy import deepcopy
 
 
 class PathPlanning(object):
@@ -216,14 +217,48 @@ class PathPlanning(object):
                     #print("kek")
                     s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[1]])
                     self.start_points.append(s_0)
-                    #s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
-                    #self.start_points.append(s_1)
+                    if sorted_simplex[2] == len(del_init) - 1:
+                        s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
+                        self.start_points.append(s_1)
                 elif sorted_simplex[0] == sorted_simplex[1] - 2 and sorted_simplex[1] == sorted_simplex[2] - 1:
                     s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[2]])
                     self.start_points.append(s_0)
-                    #s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
-                    #self.start_points.append(s_1)
-                           
+                    if sorted_simplex[2] == len(del_init) - 1:
+                        s_1 = self.calculate_center(del_init[sorted_simplex[1]], del_init[sorted_simplex[2]])
+                        self.start_points.append(s_1)
+        self.smooth2()
+        
+    def smooth2(self, width = 1):
+        #print('=======')
+        #print(self.start_points)
+        sp_nparray = np.array(self.start_points)
+        smoothed_points = np.zeros_like(sp_nparray)
+        weights = np.ones(width)/width
+        for dim in range(sp_nparray.shape[1]):
+            column_data = sp_nparray[:, dim]
+            smoothed_points[:, dim] = np.convolve(column_data, weights, mode='same')
+        self.start_points = np.ndarray.tolist(smoothed_points)
+        #print(self.start_points)
+                
+    def smooth(self):
+        weight_data=0.1
+        weight_smooth=0.1
+        #tolerance=0.000001
+        new = deepcopy(self.start_points)
+        dims = 2
+        #change = tolerance
+        #while change >= tolerance:
+        #    change = 0.0
+        for _ in range(0, 2):
+            for i in range(1, len(new) - 1):
+                for j in range(dims):
+                    x_i = self.start_points[i][j]
+                    y_i, y_prev, y_next = new[i][j], new[i - 1][j], new[i + 1][j]
+                    y_i_saved = y_i
+                    y_i += weight_data * (x_i - y_i) + weight_smooth * (y_next + y_prev - (2 * y_i))
+                    new[i][j] = y_i
+        #            change += abs(y_i - y_i_saved)
+        self.start_points = new
 
     def fill_missing(self, B, Y):
         # set_trace()
@@ -293,7 +328,7 @@ class PathPlanner():
             #self.planner.find_path(blue_cones[:, :2], yellow_cones[:, :2], n_steps=self.n_steps)
             self.planner.triangulation(blue_cones[:, :2], yellow_cones[:, :2], np.array([0., 0.]), n_steps=self.n_steps)
             path = np.vstack(self.planner.start_points)
-        except:
+        except:# ValueError as err:
             #print('except')
             #print(str(err))
             path = np.array([[0., 0.]])
