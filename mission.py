@@ -1,6 +1,7 @@
 from typing import Any
 from helpers.path_tracking import stanley_steering
-from helpers.path_planning import PathPlanner
+# from helpers.path_planning import PathPlanner
+from my_implementations.path_planning import PathPlanner
 from helpers.finish_detector import LapCounter
 from helpers.speed_profile import SpeedProfile
 
@@ -14,7 +15,8 @@ class MyMission():
 
     def __init__(self):
         # Feel free to change these parameters
-        self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
+        # self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
+        self.path_planner = PathPlanner()
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
         self.speed_profile = SpeedProfile(0.8, 2, 4)
         self.min_speed_setpoint = 5.  # m/s
