@@ -1,6 +1,7 @@
 import numpy as np
 controller_gains = {
-    "kp": np.random.rand() * 10,
-    "ki": np.random.rand() * 10,
-    "kd": np.random.rand() * 10
+    "kp": 8,
+    "ki": 2.5,
+    "kd": 1.5
 }
+print(controller_gains)
