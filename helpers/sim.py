@@ -440,6 +440,7 @@ def make_simulation_object(
         mission: object,
         state_fps: int = 90,
         mission_fps: int = 30,
+        provide_state_information: bool = False
 ):
     lcm_val = find_lcm(mission_fps, state_fps)
     mission_rate = lcm_val // mission_fps
@@ -451,7 +452,8 @@ def make_simulation_object(
             state.update_state(1 / state_fps)
         if i % mission_rate == 0:
             obs = state.get_obs()
-            mission_action = mission.loop(obs, mission_time)
+            mission_action = mission.loop(obs, mission_time, state) if provide_state_information \
+                else mission.loop(obs, mission_time)
             state.set_new_setpoints(mission_action[2], mission_action[1])
             mission_time += 1 / mission_fps
             yield mission_time, obs, mission_action

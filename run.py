@@ -1,6 +1,6 @@
 import datetime
 from argparse import ArgumentParser
-from mission import MyMission
+from mission import FirstMission, DRLMission
 from pathlib import Path
 from helpers.sim import State, StateRenderer, make_simulation_object, plot_state_summary_and_wait, history_to_csv
 from config import state_config
@@ -10,7 +10,7 @@ MAP_ROI = 120.  # meters
 
 def run_mission(map_path: str | Path, logdir: Path | None):
     state = State(map_path, state_config)
-    mission = MyMission()
+    mission = DRLMission()
     sim_runtime = make_simulation_object(state, mission)
     renderer = StateRenderer()
     renderer.set_state(state)
