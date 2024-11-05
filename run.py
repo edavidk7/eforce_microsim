@@ -8,7 +8,7 @@ from config import state_config
 MAP_ROI = 120.  # meters
 
 
-def run_mission(map_path: str | Path, logdir: Path | None, render: bool):
+def run_mission(map_path: str | Path, logdir: Path | None, render: bool, benchmark: bool = False):
     state = State(map_path, state_config)
     mission = MyMission()
     sim_runtime = make_simulation_object(state, mission)
@@ -23,7 +23,11 @@ def run_mission(map_path: str | Path, logdir: Path | None, render: bool):
         if finished == True:
             lap_time = mission_action[3]["lap_times"][0]
             print(f"Finished lap in {lap_time:.2f} seconds!")
+            if benchmark == True:
+                print(f"Number of cones hit: {state.cones_hit.sum()}")
+                print(f"Benchmark time: {(lap_time + 2.*state.cones_hit.sum()):.2f}")
             finish_time = lap_time
+            if benchmark: finish_time += 2.*state.cones_hit.sum()
             break
         elif not state.is_within_roi(MAP_ROI):
             print("Car went out of bounds!")
@@ -38,6 +42,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument("--no_logs", action="store_true", default=False)
     parser.add_argument("--no_render", action="store_true", default=False)
+    parser.add_argument("--benchmark", action="store_true", default=False)
     args = parser.parse_args()
     if args.no_logs:
         logdir = None
@@ -45,10 +50,6 @@ if __name__ == '__main__':
     else:
         logdir = Path("logs") / datetime.datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
         print(f"Logging to {logdir}")
-    if args.no_render:
-        render = False
-    else:
-        render = True
     for i in range(1, 4):
         MAP_PATH = Path(f"maps/map{i}.json")
         if logdir is not None:
@@ -57,4 +58,4 @@ if __name__ == '__main__':
         else:
             subdir = None
         print(f"Running mission on map {i}")
-        run_mission(MAP_PATH, subdir, render)
+        run_mission(MAP_PATH, subdir, not args.no_render, args.benchmark)
