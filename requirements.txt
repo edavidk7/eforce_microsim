@@ -4,3 +4,4 @@ matplotlib
 pandas
 opencv-python
 pyqt5
+torch
