@@ -3,3 +3,4 @@ numpy
 matplotlib
 pandas
 opencv-python
+pyqt5

@@ -3,6 +3,7 @@ from pathlib import Path
 import time
 import numpy as np
 import platform
+import warnings
 if platform.system() == "Darwin":
     import matplotlib
     matplotlib.use("Qt5Agg")
@@ -512,6 +513,10 @@ def plot_state_summary_and_wait(state: State, finish_time: float, success: bool)
     ax[1, 1].scatter(ok_cones[:, 0], ok_cones[:, 1], c="green", s=8, edgecolors='black', linewidth=0.5)
     ax[1, 1].scatter(hit_cones[:, 0], hit_cones[:, 1], c="red", s=8, edgecolors='black', linewidth=0.5)
     fig.tight_layout(pad=2.5, h_pad=5.0)
-    fig.show()
+    try:
+        mng = plt.get_current_fig_manager()
+        mng.window.showMaximized()
+    except:
+        warnings.warn("Could not maximize window. Please maximize manually.")
     fig.waitforbuttonpress()
     plt.close(fig)

@@ -21,19 +21,19 @@ While the animation is running, you can press `q` to hide it or `e` to quit the 
 ## Structure
 
 - `run.py` - Main runner script for the simulation
-- `user_config.py` - User configuration file for the simulation, **which you can edit**
+- `gains.py` - PID controller gains, **which you will be tuning**
 - `mission.py` - Mission file for the simulation, **which you will be implementing**
 - `bin/` - Contains the binary files for the simulator
 - `helpers/` - Contains all driverless algorithms and simulator code
 - `maps/` - Contains all the maps for the simulator
 
-While running the simulation, a log folder will be automatically created with csv files containing the logs of the simulation for each of the maps.
+While running the simulation, a log folder will be automatically created with csv files containing logs of the simulation for each of the maps.
 You can disable this by running the simulation with the `--no_log` flag.
 
 ## Task
 
 1. Implement the `mission.py` file to successfully drive around the track
-2. Tune the PID controller in the `user_config.py` file to achieve the best performance
+2. Tune the PID controller in the `gains.py` file to achieve the best performance
 3. Be the fastest around the track! You will be compared with others
 
 ### Tips
@@ -50,6 +50,7 @@ Have fun!
 ## Notes
 
 If you end up writing your own algorithm (for anything), please include it in your `mission.py` file and make sure to document it well. We will be looking at your code and how well you can explain it.
+If you algorithm ends up needing a depedency, include it in the `requirements.txt` file and submit it with your solution.
 
 ## Helpful resources
 
