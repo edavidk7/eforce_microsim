@@ -16,7 +16,7 @@ class MyMission():
         # Feel free to change these parameters
         self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
-        self.speed_profile = SpeedProfile(0.8, 8, 12)
+        self.speed_profile = SpeedProfile(0.8, 10, 15)
         self.min_speed_setpoint = 15.  # m/s
         self.max_safe_speed = 20.  # m/s
         self.speed_setpoint = self.min_speed_setpoint
@@ -33,7 +33,7 @@ class MyMission():
             self.speed_setpoint = self.speed_profile.profile(path, wheel_speed)[0]
         except Exception as e:
             print(f"Error in speed profile: {e}")
-        if self.speed_setpoint >= 5:
+        if self.speed_setpoint >= 4:
             self.speed_setpoint = max(min(self.speed_setpoint, self.max_safe_speed), self.min_speed_setpoint)
         # 2. Stopping/finish logic
         self.lap_counter.update(percep_data.copy(), wheel_speed, mission_time)

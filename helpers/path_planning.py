@@ -199,22 +199,19 @@ class PathPlanning(object):
 
     def triangulation(self, B, Y, start_point, n_steps, verbose=False):
         self.find_path(B, Y, n_steps=n_steps)
-        #print("jej1")
         if min(len(self.sorted_blue_cones), len(self.sorted_yellow_cones)) >= 2:# and self.switch == False:
+            #if self.switch == False:
             #self.start_points = [start_point]
             del_init = []
             for i in range(0, min(len(self.sorted_blue_cones), len(self.sorted_yellow_cones))):
-                del_init.append(self.sorted_yellow_cones[i])
                 del_init.append(self.sorted_blue_cones[i])
-            #print(len(del_init))
-            #print("jej2")    
+                del_init.append(self.sorted_yellow_cones[i])
+            #print(len(del_init))  
             tri = ss.Delaunay(del_init)
             for simplex in tri.simplices:
                 sorted_simplex = np.sort(simplex)
-                #print("jej3")
                 #print(str(sorted_simplex[0]) + " " + str(sorted_simplex[1]) + " " + str(sorted_simplex[2]))
                 if sorted_simplex[0] == sorted_simplex[1] - 1 and sorted_simplex[1] == sorted_simplex[2] - 1:
-                    #print("kek")
                     s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[1]])
                     self.start_points.append(s_0)
                     if sorted_simplex[2] == len(del_init) - 1:
