@@ -138,7 +138,7 @@ class PathPlanning(object):
 
             TODO: invent something more robust
             """
-            print("Filling missing cones")
+            #print("Filling missing cones")
             if Y.size != 0:
                 tmp_cone = [0, 0]
                 closest = []

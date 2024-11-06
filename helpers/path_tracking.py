@@ -53,9 +53,14 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
       delta - steering wheel angle
       log_msg - dictionary containing internal values of the controller (for debugging purposes)
     """
-    if False:
-        lookahead_dist = lookahead_dist * speed / 8.896666666666667
-        lookahead_dist = np.clip(lookahead_dist, 0.1, 15.0)
+    # Adjust damping for higher speeds
+    if speed > 0:
+        lookahead_dist = lookahead_dist * (1 + speed / 45)
+        lookahead_dist = np.clip(lookahead_dist, 0.1, 8.0)
+        damping_factor = 1 / (1 + speed / 15)  # Less damping at high speeds
+    else:
+        damping_factor = 1.0
+
     target = get_lookahead_point(lookahead_dist, path)
     lateral_target = get_lookahead_point(0.0, path)
 
@@ -65,19 +70,26 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
     direction = math.atan2(dy, dx)
     if len(path) > 1:
         lat_offset = lateral_target[1]
-        # lat_offset = target[1]
     else:
         lat_offset = 0
-    if speed > 0.3:
-        nonLinear = 2 * math.atan2(lateran_gain * lat_offset, speed) / np.pi
+
+    # More aggressive cornering at higher speeds
+    if speed > 0.05:
+        # Progressive corner boost that increases with speed
+        speed_factor = (1.0 + speed / 10)  # Increases effect at higher speeds
+        corner_boost = (1.0 + abs(lat_offset)) * speed_factor
+        nonLinear = 5.0 * corner_boost * math.atan2(lateran_gain * lat_offset, speed) / np.pi * damping_factor
     else:
         nonLinear = 0
 
-    linear = gain * direction
-    if np.linalg.norm(target) > 0.3:
+    # Keep aggressive base gain
+    linear = gain * 1.6 * direction * damping_factor
+
+    if np.linalg.norm(target) > 0.05:
         delta = linear + nonLinear
     else:
         delta = 0.0
+
     delta *= 180 / np.pi
     delta = np.clip(delta, car_params["min_steering_angle"], car_params["max_steering_angle"])
 
