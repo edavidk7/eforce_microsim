@@ -146,8 +146,9 @@ class SpeedProfiler:
             speed = self.model(state)
 
         # Update the model if training
-        if self.train and reward is not None and self.last_state is not None:
-            self._update_reward(self.last_state, self.last_action, reward, state)
+        if self.train and reward is not None:
+            if self.last_state is not None:
+                self._update_reward(self.last_state, self.last_action, reward, state)
             self.last_state = state
             self.last_action = speed
 
