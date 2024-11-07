@@ -53,10 +53,15 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
       delta - steering wheel angle
       log_msg - dictionary containing internal values of the controller (for debugging purposes)
     """
+    # Conservative base values
+    gain = 1.5  # Start lower, increase if understeer
+    lateran_gain = 1.5
+    base_lookahead = 5.5
+
     # Adjust damping for higher speeds
     if speed > 0:
-        lookahead_dist = lookahead_dist * (1 + speed / 45)
-        lookahead_dist = np.clip(lookahead_dist, 0.1, 8.0)
+        lookahead_dist = base_lookahead * (1 + speed / 25)
+        lookahead_dist = np.clip(lookahead_dist, 1, 15.0)
         damping_factor = 1 / (1 + speed / 15)  # Less damping at high speeds
     else:
         damping_factor = 1.0

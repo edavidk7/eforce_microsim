@@ -45,7 +45,7 @@ class MyMission():
         if self.stopped_time + 1. < mission_time:
             self.finished = True
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 7.5, wheel_speed, min(max(2.8/((max(self.speed_setpoint-9, 0.5))/0.85), 2), 3.2/(wheel_speed/10)), 0.0)
+        steering_ang, controller_log = stanley_steering(path, 7.5, wheel_speed, 2.9, 0.0)
         # 4. logging and debugging
         extras = {
             "mission_time": mission_time,
