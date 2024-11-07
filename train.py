@@ -15,7 +15,8 @@ def run_map(model: SpeedProfiler, map_path: str | Path) -> None:
         finished, steering_angle, speed_setpoint, _ = mission_action
 
         if finished:
-            print(f"Finished in {mission_time:.2f} seconds!")
+            lap_time = mission_action[3]["lap_times"][0]
+            print(f"Finished in {lap_time:.2f} seconds! ({state.cones_hit.sum()} cones hit)")
             break
 
         elif not state.is_within_roi(120.):
@@ -26,6 +27,7 @@ def run_map(model: SpeedProfiler, map_path: str | Path) -> None:
 def run_one_simulation(model: SpeedProfiler) -> None:
     for i in range(1, 4):
         map_path = Path(f"maps/map{i}.json")
+        print(f"Running simulation on {map_path}")
         run_map(model, map_path)
 
 
@@ -42,5 +44,6 @@ def run_for_n_seconds(n: int, model: SpeedProfiler) -> None:
 
 if __name__ == "__main__":
     model = SpeedProfiler(train=True, logging=True)
-    run_for_n_iter(100, model)
+    # run_for_n_iter(100, model)
+    run_for_n_seconds(60 * 60 * 8, model)
     model.save_model()
