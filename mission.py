@@ -57,7 +57,7 @@ class DRLMission:
             self.finished = True
 
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 3, wheel_speed, 1.8, 0.6)
+        steering_ang, controller_log = stanley_steering(path, 3.5, wheel_speed, 1.8, 0.75)
 
         # 4. logging and debugging
         extras = {
