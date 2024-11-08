@@ -17,7 +17,7 @@ BATCH_SIZE = 32
 LR = 1e-3
 TAU = 0.005
 MAX_MEMORY = 10000
-PARAM_PATH = 'params/speed_profiler.pth'
+PARAM_PATH = 'params/speed_profiler_first.pth'
 
 
 class Actor(nn.Module):

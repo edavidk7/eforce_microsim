@@ -20,7 +20,7 @@ class DRLMission:
         self.reward_calculator = RewardCalculator()
 
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
-        self.min_speed_setpoint = 5.  # m/s
+        self.min_speed_setpoint = 8.  # m/s
         self.max_safe_speed = 16.  # m/s
         self.speed_setpoint = self.min_speed_setpoint
         self.finished = False
