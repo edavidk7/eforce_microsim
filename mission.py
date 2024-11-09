@@ -78,6 +78,66 @@ class DRLMission:
         self.speed_profile.save_model()
 
 
+class EVAMission:
+    """
+    Mission class only for testing purposes (fitness evaluation in hyperparameter selection via differential evolution)
+    """
+    def __init__(self, hyperparameters: list, speed_profiler: DRLSpeedProfiler) -> None:
+        self.path_planner = PathPlanner()
+        self.speed_profile = speed_profiler
+        self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
+
+        self.min_speed_setpoint = hyperparameters[0]
+        self.max_safe_speed = hyperparameters[1]
+        self.lookahead_distance = hyperparameters[2]
+        self.gain = hyperparameters[3]
+        self.lateral_gain = hyperparameters[4]
+
+        self.speed_setpoint = self.min_speed_setpoint
+        self.finished = False
+        self.finish_time = float('inf')
+        self.stopped_time = float('inf')
+
+    def loop(self, args: dict, mission_time: float) -> tuple[bool, float, Any, dict[str, Any]]:
+        percep_data = args["percep_data"]
+        wheel_speed = args["actual_speed"]
+        steering_angle = args["actual_steering_angle"]
+
+        # 1. Path planning and speed profile
+        path = self.path_planner.find_path(percep_data)
+        try:
+            self.speed_setpoint += self.speed_profile.predict(path, wheel_speed, steering_angle)
+        except Exception as e:
+            print(f"Error in speed profile: {e}")
+
+        self.speed_setpoint = max(min(self.speed_setpoint, self.max_safe_speed), self.min_speed_setpoint)
+
+        # 2. Stopping/finish logic
+        self.lap_counter.update(percep_data.copy(), wheel_speed, mission_time)
+        if self.lap_counter.lap_count >= 1:
+            self.speed_setpoint = 0.0
+            if wheel_speed <= 0.1:
+                self.stopped_time = min(mission_time, self.stopped_time)
+        if self.stopped_time + 1. < mission_time:
+            self.finished = True
+
+        # 3. controls, you SHOULD tune the constants here
+        steering_ang, controller_log = stanley_steering(path, self.lookahead_distance, wheel_speed, self.gain,
+                                                        self.lateral_gain)
+
+        # 4. logging and debugging
+        extras = {
+            "mission_time": mission_time,
+            "finish_time": self.finish_time,
+            "path": path,
+            "lap_times": self.lap_counter.lap_times,
+            "controller_log": controller_log,
+        }
+
+        # 5. return
+        return self.finished, self.speed_setpoint, steering_ang, extras
+
+
 class FirstMission:
     """
     Mission class using my path planner (Delaunay) and provided speed profiler

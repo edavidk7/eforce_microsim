@@ -7,9 +7,16 @@ from pathlib import Path
 CONE_HIT_PENALTY = 2
 
 
-def time_map(mission: callable, map_path: str | Path) -> (bool, float):
-    mission = mission()
-    state = State(map_path, state_config)
+def time_map(mission: callable, map_path: str | Path, config: dict | None = None, init_mission: bool = True) -> (bool, float, int):
+    """
+    Run the simulation for a single map and return the results
+    :param mission: Mission class or instance to use
+    :param map_path: Path to the map file
+    :param config: Configuration for the state (optional, default is state_config)
+    :param init_mission: Whether to initialize the mission class (default is True)
+    """
+    mission = mission() if init_mission else mission
+    state = State(map_path, config if config is not None else state_config)
     sim_runtime = make_simulation_object(state, mission)
 
     for i, (mission_time, observations, mission_action) in enumerate(sim_runtime):
@@ -21,7 +28,7 @@ def time_map(mission: callable, map_path: str | Path) -> (bool, float):
             return True, lap_time, cones_hit
 
         elif not state.is_within_roi(120.):
-            return False, 0., 0.
+            return False, 0., 0
 
 
 def time(mission: callable, num_sims: int = 10) -> None:
