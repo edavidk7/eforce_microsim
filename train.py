@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from mission import DRLMission
 from my_implementations.speed_profile import SpeedProfiler
 from helpers.sim import State, make_simulation_object

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from test import time_map, CONE_HIT_PENALTY
 from config import state_config
 from pathlib import Path

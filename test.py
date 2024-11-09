@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from mission import DRLMission, FirstMission
 from helpers.sim import State, make_simulation_object
 from config import state_config
