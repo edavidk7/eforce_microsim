@@ -1,6 +1,6 @@
 import numpy as np
 from config import ConeClasses
-
+from scipy.interpolate import splprep, splev
 
 class PathPlanning(object):
     def __init__(self, start_point, clockwise=-1, filling_cones_distance=4.5, movement_direction="x", debugging=False):
@@ -138,12 +138,15 @@ class PathPlanning(object):
 
             TODO: invent something more robust
             """
+
             if Y.size != 0:
                 Y = Y[np.argsort(Y[:, self.movement_direction])]
             else:
                 B = B[np.argsort(B[:, self.movement_direction])]
 
             B, Y = self.fill_missing(B, Y)
+
+
         self.tmp = {"B": B, "Y": Y}
 
         if n_steps < 1:
@@ -202,6 +205,7 @@ class PathPlanning(object):
         else:
             to_fill = Y
             full = B
+
         if len(to_fill) == 0:
             to_fill = to_fill.reshape(-1, full.shape[1])
 
