@@ -4,6 +4,7 @@ from test import time_map, CONE_HIT_PENALTY
 from config import state_config
 from pathlib import Path
 import random
+import multiprocessing
 from functools import total_ordering
 from mission import EVAMission
 from my_implementations.speed_profile import SpeedProfiler
@@ -21,7 +22,8 @@ RANGES = [
 ]
 POP_SIZE = 10
 CR = 0.9
-FAIL_PENALTY = 20
+FAIL_PENALTY = 50
+TIMEOUT_LIMIT = 100
 NUM_SIMS = 3
 speed_profiler = SpeedProfiler()
 
@@ -37,26 +39,44 @@ class Individual:
         if self.fitness is None:
             # Run the simulation
             results = []
-            for i in range(1, 4):
-                state_config['controller_gains'] = {
-                    'kp': self.hyperparameters[5],
-                    'ki': self.hyperparameters[6],
-                    'kd': self.hyperparameters[7],
-                }
+            state_config['controller_gains'] = {
+                'kp': self.hyperparameters[5],
+                'ki': self.hyperparameters[6],
+                'kd': self.hyperparameters[7],
+            }
 
-                map_path = Path(f"maps/map{i}.json")
-                mission = EVAMission(self.hyperparameters, speed_profiler)
+            def simulate(queue: multiprocessing.Queue) -> None:
+                results = []
+                for i in range(1, 4):
+                    map_path = Path(f"maps/map{i}.json")
+                    mission = EVAMission(self.hyperparameters, speed_profiler)
 
-                for _ in range(NUM_SIMS):
-                    results.append(time_map(mission, map_path, state_config, init_mission=False))
+                    for _ in range(NUM_SIMS):
+                        results.append(time_map(mission, map_path, state_config, init_mission=False))
+                queue.put(results)
 
-            # Calculate fitness
-            self.fitness = 0
-            for fail, time, cones in results:
-                if fail:
-                    self.fitness += FAIL_PENALTY
-                else:
-                    self.fitness += time + CONE_HIT_PENALTY * cones
+            # Run the simulation in a separate process with timeout
+            queue = multiprocessing.Queue()
+            process = multiprocessing.Process(target=simulate, args=(queue,))
+            process.start()
+            process.join(TIMEOUT_LIMIT)
+
+            # Punish the individual if it times out
+            if process.is_alive():
+                process.terminate()
+                process.join()
+                self.fitness = FAIL_PENALTY * 3 * NUM_SIMS
+
+            else:
+                results = queue.get()
+                # Calculate fitness
+                self.fitness = 0
+                for success, time, cones in results:
+                    if not success:
+                        self.fitness += FAIL_PENALTY
+                    else:
+                        self.fitness += time + CONE_HIT_PENALTY * cones
+                print(len(results), self.fitness)
 
         return self.fitness
 
@@ -79,7 +99,7 @@ class DifferentialEvolution:
         child_params = []
         for i in range(len(RANGES)):
             if random.random() < CR:
-                child_params.append(original_params[i])
+                child_params.append(max(RANGES[i][0], min(original_params[i], RANGES[i][1])))
             else:
                 child_params.append(parent.hyperparameters[i])
 
@@ -92,13 +112,13 @@ class DifferentialEvolution:
         offspring_params = [a.hyperparameters[i] + F * (b.hyperparameters[i] - c.hyperparameters[i]) for i in range(len(RANGES))]
         offspring = DifferentialEvolution.crossover(offspring_params, parent)
 
-        if offspring >= parent:
+        if offspring <= parent:
             return offspring
         else:
             return parent
 
     def get_best(self) -> Individual:
-        return max(self.population)
+        return min(self.population)
 
     def evolve(self) -> None:
         new_population = []
