@@ -17,14 +17,14 @@ BATCH_SIZE = 32
 LR = 1e-3
 TAU = 0.005
 MAX_MEMORY = 10000
-PARAM_PATH = 'params/speed_profiler_first.pth'
+PARAM_PATH = 'params/speed_profiler.pth'
 
 
 class Actor(nn.Module):
     """
     Actor network predicting speed change based on the current state
     """
-    def __init__(self) -> None:
+    def __init__(self, train: bool = None) -> None:
         super(Actor, self).__init__()
         self.fc1 = nn.Linear(STATE_DIM, HIDDEN_SIZE)
         self.fc2 = nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE)
@@ -32,7 +32,8 @@ class Actor(nn.Module):
 
         self.softsign = nn.Softsign()
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Use CPU for non-train use (faster)
+        self.device = torch.device("cuda" if torch.cuda.is_available() and train else "cpu")
         self.to(self.device)
 
     def forward(self, x: torch.tensor) -> None:
@@ -62,7 +63,7 @@ class SpeedProfiler:
         self.memory = deque(maxlen=MAX_MEMORY)
 
         # Actor
-        self.model = Actor()
+        self.model = Actor(train)
 
         self.optimizer = None
         if os.path.exists(PARAM_PATH):
