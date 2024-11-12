@@ -67,6 +67,6 @@ class RewardCalculator:
         else:
             # Speed encouragement
             # (only if the car is not off track)
-            reward += 0.01 * state.noisy_speed
+            reward += 0.005 * state.noisy_speed
 
         return RewardScaler.scale_reward(reward)
