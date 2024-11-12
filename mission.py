@@ -16,9 +16,9 @@ class MyMission():
         # Feel free to change these parameters
         self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
-        self.speed_profile = SpeedProfile(0.8, 2, 4)
+        self.speed_profile = SpeedProfile(0.8, 2.5, 5)
         self.min_speed_setpoint = 5.  # m/s
-        self.max_safe_speed = 8.  # m/s
+        self.max_safe_speed = 25.  # m/s
         self.speed_setpoint = self.min_speed_setpoint
         self.finished = False
         self.finish_time = float('inf')
@@ -44,7 +44,7 @@ class MyMission():
         if self.stopped_time + 1. < mission_time:
             self.finished = True
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 4.5, wheel_speed, 2.9, 0.0)
+        steering_ang, controller_log = stanley_steering(path, 3.5, wheel_speed, 3, 0)
         # 4. logging and debugging
         extras = {
             "mission_time": mission_time,
