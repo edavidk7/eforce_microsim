@@ -138,7 +138,6 @@ class PathPlanning(object):
 
             TODO: invent something more robust
             """
-
             if Y.size != 0:
                 Y = Y[np.argsort(Y[:, self.movement_direction])]
             else:

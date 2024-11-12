@@ -18,7 +18,7 @@ class MyMission():
         self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
         self.speed_profile = SpeedProfile(0.9, 3, 6)
         self.min_speed_setpoint = 11.25  # m/s
-        self.max_safe_speed = 22  # m/s
+        self.max_safe_speed = 18  # m/s
         self.speed_setpoint = self.min_speed_setpoint
         self.finished = False
         self.finish_time = float('inf')
@@ -35,6 +35,8 @@ class MyMission():
             print(f"Error in speed profile: {e}")
 
         self.speed_setpoint = max(min(self.speed_setpoint, self.max_safe_speed), self.min_speed_setpoint)
+        if len(percep_data) < 2 or not percep_data[0].any() or not percep_data[1].any():
+            self.speed_setpoint = 5
         # 2. Stopping/finish logic
         self.lap_counter.update(percep_data.copy(), wheel_speed, mission_time)
         if self.lap_counter.lap_count >= 1:
@@ -44,7 +46,7 @@ class MyMission():
         if self.stopped_time + 1. < mission_time:
             self.finished = True
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 4.4, wheel_speed, 2.65 , 0.3)
+        steering_ang, controller_log = stanley_steering(path, 4.4, wheel_speed, 2.85 , 0.0)
         # 4. logging and debugging
         extras = {
             "mission_time": mission_time,

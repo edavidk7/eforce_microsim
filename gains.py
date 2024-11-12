@@ -1,6 +1,6 @@
 import numpy as np
 controller_gains = {
-    "kp": 7,
-    "ki": 1.2,
+    "kp": 6.8,
+    "ki": 0.15,
     "kd": 0.025
 }
