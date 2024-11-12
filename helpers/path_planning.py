@@ -206,11 +206,9 @@ class PathPlanning(object):
             for i in range(0, min(len(self.sorted_blue_cones), len(self.sorted_yellow_cones))):
                 del_init.append(self.sorted_blue_cones[i])
                 del_init.append(self.sorted_yellow_cones[i])
-            #print(len(del_init))  
             tri = ss.Delaunay(del_init)
             for simplex in tri.simplices:
                 sorted_simplex = np.sort(simplex)
-                #print(str(sorted_simplex[0]) + " " + str(sorted_simplex[1]) + " " + str(sorted_simplex[2]))
                 if sorted_simplex[0] == sorted_simplex[1] - 1 and sorted_simplex[1] == sorted_simplex[2] - 1:
                     s_0 = self.calculate_center(del_init[sorted_simplex[0]], del_init[sorted_simplex[1]])
                     self.start_points.append(s_0)
