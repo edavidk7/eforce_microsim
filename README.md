@@ -61,3 +61,6 @@ If you algorithm ends up needing a depedency, include it in the `requirements.tx
 5. https://numpy.org/
 6. https://docs.python.org/3.11/
 7. https://dspace.cvut.cz/handle/10467/101617
+
+## Presentation
+[hýr](https://arc.net/e/891023D1-18E5-42FD-A23F-84186015057C)
