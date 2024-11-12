@@ -15,11 +15,11 @@ class MyMission():
     def __init__(self):
         # Feel free to change these parameters
         self.path_planner = PathPlanner({"n_steps": 20, "verbose": False})
-        self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4])
+        self.lap_counter = LapCounter(6, 2., 10., [-0.5, 10, -4, 4]) 
         self.speed_profile = SpeedProfile(0.8, 2, 4)
-        self.min_speed_setpoint = 5.  # m/s
-        self.max_safe_speed = 8.  # m/s
-        self.speed_setpoint = self.min_speed_setpoint
+        self.min_speed_setpoint = 2.5  # m/s # original 5
+        self.max_safe_speed = 15 # float('inf')  # m/s # original 8
+        self.speed_setpoint = 20 #self.min_speed_setpoint
         self.finished = False
         self.finish_time = float('inf')
         self.stopped_time = float('inf')
@@ -34,17 +34,19 @@ class MyMission():
         except Exception as e:
             print(f"Error in speed profile: {e}")
 
-        self.speed_setpoint = max(min(self.speed_setpoint, self.max_safe_speed), self.min_speed_setpoint)
+        self.speed_setpoint = 1.2 * max(min(self.speed_setpoint, self.max_safe_speed), self.min_speed_setpoint)
+        #print(self.speed_setpoint)
         # 2. Stopping/finish logic
         self.lap_counter.update(percep_data.copy(), wheel_speed, mission_time)
         if self.lap_counter.lap_count >= 1:
             self.speed_setpoint = 0.0
-            if wheel_speed <= 0.1:
+            '''if wheel_speed <= 0.1:
                 self.stopped_time = min(mission_time, self.stopped_time)
-        if self.stopped_time + 1. < mission_time:
+                print (self.stopped_time)
+        if self.stopped_time + 1. < mission_time:'''
             self.finished = True
         # 3. controls, you SHOULD tune the constants here
-        steering_ang, controller_log = stanley_steering(path, 4.5, wheel_speed, 2.9, 0.0)
+        steering_ang, controller_log = stanley_steering(path, 3.5, wheel_speed)
         # 4. logging and debugging
         extras = {
             "mission_time": mission_time,
