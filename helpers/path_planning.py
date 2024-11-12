@@ -248,6 +248,7 @@ class PathPlanner():
     def __init__(self, opt={"n_steps": 20}):
         self.n_steps = opt["n_steps"]
         self.planner = PathPlanning(np.array([0, 0]))
+        self.lookahead_constant = 2
 
     def find_path(self, cones):
         self.planner.reset(np.array([0, 0]))

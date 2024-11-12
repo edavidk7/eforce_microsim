@@ -39,7 +39,7 @@ def get_lookahead_idx(path, start_idx, lookahead_dist):
     return lookahead_idx % path.shape[0]
 
 
-def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
+def stanley_steering(path, lookahead_dist, speed):
     """
     Lateral steering controller
     Args:
@@ -53,9 +53,15 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
       delta - steering wheel angle
       log_msg - dictionary containing internal values of the controller (for debugging purposes)
     """
-    if False:
-        lookahead_dist = lookahead_dist * (speed / 7.0)
-        lookahead_dist = np.clip(lookahead_dist, 2.8, 6.5)
+    gain = ((-0.15) * speed) + 6.
+    gain = np.clip (gain, 0.3, 2)
+    
+    lateran_gain = (0.2 * speed) + 0.8
+    lateran_gain = np.clip (lateran_gain, 3, 6.5)
+
+    lookahead_dist = lookahead_dist * (speed / 5.5)
+    lookahead_dist = np.clip(lookahead_dist, 2.8, 8.5)
+    
     target = get_lookahead_point(lookahead_dist, path)
     lateral_target = get_lookahead_point(0.0, path)
 

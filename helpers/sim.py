@@ -47,7 +47,10 @@ class State():
 
     def update_state(self, timedelta: float) -> None:
         self.update_steering_angle(timedelta)
+        max_torque_change = 20
         torque = self.controller.step(self.speed_set_point, self.noisy_speed, timedelta)
+        if len(self.actual_history["torque"]) > 0:
+            torque = np.clip(torque, self.actual_history["torque"][-1]-max_torque_change, self.actual_history["torque"][-1]+max_torque_change)
         self.update_from_kinematic_model(torque, timedelta)
         self.check_cone_collisions()
         self.setpoint_history["speed"].append(self.speed_set_point)
