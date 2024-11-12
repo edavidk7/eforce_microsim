@@ -53,12 +53,12 @@ def stanley_steering(path, lookahead_dist, speed, gain, lateran_gain):
       delta - steering wheel angle
       log_msg - dictionary containing internal values of the controller (for debugging purposes)
     """
-    print("speed", speed)
+    #print("speed", speed)
     if speed > 11.5 :
         lookahead_dist = lookahead_dist * (speed / 11)
         lookahead_dist = np.clip(lookahead_dist, 3.4, 6.5)
 
-    print("lookahead_dist", lookahead_dist)
+    #print("lookahead_dist", lookahead_dist)
     target = get_lookahead_point(lookahead_dist, path)
     lateral_target = get_lookahead_point(0.0, path)
 
