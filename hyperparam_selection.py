@@ -16,13 +16,13 @@ RANGES = [
     (1, 10),  # lookahead distance
     (0, 10),  # gain
     (0, 10),  # lateran gain
-    (0, 10),  # kp
-    (0, 10),  # ki
-    (0, 10),  # kd
+    (5, 20),  # kp
+    (0, 20),  # ki
+    (0, 20),  # kd
 ]
 POP_SIZE = 10
 CR = 0.9
-FAIL_PENALTY = 50
+FAIL_PENALTY = 100
 TIMEOUT_LIMIT = 100
 NUM_SIMS = 3
 speed_profiler = SpeedProfiler()
