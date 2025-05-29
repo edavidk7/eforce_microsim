@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The main use of this miniature simulator is to give space for the newbies in Formula Student team, eForce Prague Formula, to get familiar with our ecosystem and to uleash their creativitiy along with competitive spirit, as these values define the core values of the Formula Student competition. We have decided to release the microsim to the public, creating an opportunity for anyone to calibrate and develop upon our basic stack.
+The main use of this miniature simulator is to give space for the newbies in Formula Student team, eForce Prague Formula, to get familiar with our ecosystem and to unleash their creativity along with competitive spirit, as these values define the core values of the Formula Student competition. We have decided to release the microsim to the public, creating an opportunity for anyone to calibrate and develop upon our basic stack.
 
 ## Installation
 
