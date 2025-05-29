@@ -2,19 +2,20 @@
 
 ## Introduction
 
-Using this miniature simulator, you will be tasked with tuning and possibly implementing the autonomous algorithm stack that's required to successfully drive around a FS Driverless track.
+The main use of this miniature simulator is to give space for the newbies in Formula Student team, eForce Prague Formula, to get familiar with our ecosystem and to uleash their creativitiy along with competitive spirit, as these values define the core values of the Formula Student competition. We have decided to release the microsim to the public, creating an opportunity for anyone to calibrate and develop upon our basic stack.
 
 ## Installation
 
 1. Clone this repository onto a machine with Linux or macOS, do it over [SSH](https://phoenixnap.com/kb/git-clone-ssh) for easier access (that is what you will be using once you start developing the full system)
-2. Make sure to have python >= 3.10 installed (ideally 3.11 - 3.12). On macOS, use [homebrew](https://brew.sh/) exclusively for all packages. On Ubuntu, install it using [deadsnakes](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Other Linux distros usually have good package managers with latest python versions (Fedora, Manjaro, Arch).
-3. Activate you venv if applicable or make sure your python is aliased under `python`
-4. Run `python -m pip install -r requirements.txt` to install the required packages
-5. run `python run.py` to start the simulation with evaluation
+1.5. Cloning the repository for Windows system is possible, however you must first install WSL (Windows Subsystem for Linux) and requires a little longer setup. 
+3. Make sure to have python >= 3.10 installed (ideally 3.11 - 3.12). On macOS, use [homebrew](https://brew.sh/) exclusively for all packages. On Ubuntu, install it using [deadsnakes](https://launchpad.net/~deadsnakes/+archive/ubuntu/ppa). Other Linux distros usually have good package managers with latest python versions (Fedora, Manjaro, Arch).
+4. Activate you venv if applicable or make sure your python is aliased under `python`
+5. Run `python -m pip install -r requirements.txt` to install the required packages
+6. run `python run.py` to start the simulation with evaluation
 
 ![Sim screenshot](./img/sim.png)
 
-While the animation is running, you can press `q` to hide it or `e` to quit the whole program. After the simulation, a summary pane is shown. Press any key to close it and continue with the next map. You can press `s` to save the summary plot to an image.
+While the animation is running, you can press `q` to hide it or `e` to quit the whole program. After the simulation, a summary panel is shown. Press any key to close it and continue with the next map. You can press `s` to save the summary plot to an image.
 
 ![Summary screenshot](./img/summary.png)
 
@@ -34,7 +35,7 @@ You can disable this by running the simulation with the `--no_log` flag.
 
 1. Implement the `mission.py` file to successfully drive around the track
 2. Tune the PID controller in the `gains.py` file to achieve the best performance
-3. Be the fastest around the track! You will be compared with others
+3. Be the fastest around the track!
 
 ### Tips
 
@@ -46,11 +47,6 @@ You can disable this by running the simulation with the `--no_log` flag.
 Have fun!
 
 ![Peepo](https://cdn.frankerfacez.com/emoticon/577131/4)
-
-## Notes
-
-If you end up writing your own algorithm (for anything), please include it in your `mission.py` file and make sure to document it well. We will be looking at your code and how well you can explain it.
-If you algorithm ends up needing a depedency, include it in the `requirements.txt` file and submit it with your solution.
 
 ## Helpful resources
 
